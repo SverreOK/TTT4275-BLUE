@@ -14,10 +14,10 @@ N = 100
 P = N * (N - 1) / 2
 Q = N * (N - 1) * (2 * N - 1) / 6
 
-n_0 = P / Q
+t0 = P / Q
 
 # Corrected calculation of time array
-t = np.linspace(n_0, n_0 + (N - 1) * period, N)
+t = np.linspace(t0, t0 + (N - 1) * period, N)
 
 # complex exponential signal
 s = amplitude * np.exp(1j * (angular_frequency * t + phase))
