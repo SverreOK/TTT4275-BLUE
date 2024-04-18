@@ -22,9 +22,8 @@ n = np.arange(n0, n0 + N)
 t = n * Ts
 
 # complex exponential signal
-s = amplitude * np.exp(1j * (angular_frequency * t + 
-phase_offset))
-SNRdb = 30
+s = amplitude * np.exp(1j * (angular_frequency * t + phase_offset))
+SNRdb = 10
 SNR = 10 ** (SNRdb / 10)
 
 # complex white gaussian noise
@@ -35,6 +34,7 @@ noise = np.random.normal(mean, std_dev, N) + 1j * np.random.normal(mean, std_dev
 
 # noisy signal
 x = s + noise
+# x = s
 # x = noise
 
 # Calculate magnitude and phase of the noisy signal
@@ -52,7 +52,7 @@ phase = np.unwrap(phase)
 
 # Finding the blue
 n = np.arange(N) + n0
-H = np.column_stack((n*T, np.ones(N)))
+H = np.column_stack((n*Ts, np.ones(N)))
 C = np.eye(N)*1
 
 # Compute the BLUE estimator
