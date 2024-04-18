@@ -84,3 +84,17 @@ plt.ylabel('Imaginary')
 plt.title('Complex Signal')
 plt.legend()
 plt.show()
+
+def crlb():
+    P = N * (N - 1) / 2
+    Q = N * (N - 1) * (2 * N - 1) / 6
+
+    # CRLB for frequency and phase
+    var_omega = 12 * variance / (amplitude**2 * T**2 * N * (N**2 - 1))
+    var_phi   = 12 * variance * (n0**2*N+2*n0*P+Q) / (amplitude**2 * N**2 * (N**2 - 1))
+
+    print('CRLB for Frequency: ', var_omega)
+    print('CRLB for Phase: ', var_phi)
+
+
+crlb()
