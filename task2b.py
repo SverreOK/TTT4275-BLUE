@@ -12,7 +12,7 @@ Ts = 1 / Fs
 
 
 N = 513  # Number of samples
-n0 = -(N-1)  # Starting index for samples
+n0 = -(N-1)/2  # Starting index for samples
 
 # Generate the signal :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :)
 # Generate sample indices
@@ -23,7 +23,7 @@ t = n * Ts
 
 # complex exponential signal
 s = amplitude * np.exp(1j * (angular_frequency * t + phase_offset))
-SNRdb = 10
+SNRdb = 30
 SNR = 10 ** (SNRdb / 10)
 
 # complex white gaussian noise
@@ -51,9 +51,9 @@ phase = np.unwrap(phase)
 # covariance = np.linalg.inv(FIM)
 
 # Finding the blue
-n = np.arange(N) + n0
+n = np.arange(N)+n0
 H = np.column_stack((n*Ts, np.ones(N)))
-C = np.eye(N)*1
+C = np.eye(N)*variance
 
 # Compute the BLUE estimator
 # BLUE = (H^T C^-1 H)^-1 H^T C^-1 phase_unwrapped
@@ -63,6 +63,9 @@ blue_coefficients = np.dot(np.linalg.inv(np.dot(H_trans_C_inv, H)), np.dot(H_tra
 # The estimated frequency and phase from the BLUE estimator
 estimated_omega_0T = blue_coefficients[0]
 estimated_phi = blue_coefficients[1]
+
+#adjust estimated_phi to be in the range of 0 to 2*pi
+estimated_phi = np.mod(estimated_phi, 2*np.pi)
 
 # The estimated signal
 s_est = amplitude * np.exp(1j * (estimated_omega_0T * t + estimated_phi))
