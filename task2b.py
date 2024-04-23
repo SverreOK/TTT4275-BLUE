@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+SNRdb = 0
 
 amplitude = 1
 frequency = 100000
@@ -23,11 +24,10 @@ t = n * Ts
 
 # complex exponential signal
 s = amplitude * np.exp(1j * (angular_frequency * t + phase_offset))
-SNRdb = 30
-SNR = 10 ** (SNRdb / 10)
 
 # complex white gaussian noise
 mean = 0
+SNR = 10 ** (SNRdb / 10)
 std_dev = amplitude / np.sqrt(2 * SNR)
 variance = std_dev ** 2
 noise = np.random.normal(mean, std_dev, N) + 1j * np.random.normal(mean, std_dev, N)
@@ -71,10 +71,22 @@ estimated_phi = np.mod(estimated_phi, 2*np.pi)
 s_est = amplitude * np.exp(1j * (estimated_omega_0T * t + estimated_phi))
 
 # print the original and estimated frequency and phase from the BLUE estimator
+print('SNR: ', SNRdb)
 print('Original Frequency: ', angular_frequency)
 print('Original Phase: ', phase_offset)
 print('Estimated Frequency: ', estimated_omega_0T)
 print('Estimated Phase: ', estimated_phi)
+
+# Compute the BLUE covariance matrix
+blue_covariance = np.linalg.inv(np.dot(H_trans_C_inv, H))
+
+# Extract the variances
+variance_omega_0T = blue_covariance[0, 0]
+variance_phi = blue_covariance[1, 1]
+
+# Print variances
+print('Variance of Estimated Frequency (omega_0T): ', variance_omega_0T)
+print('Variance of Estimated Phase (phi): ', variance_phi)
 
 
 # plot original signal and noisy signal and the blue
@@ -86,7 +98,7 @@ plt.xlabel('Real')
 plt.ylabel('Imaginary')
 plt.title('Complex Signal')
 plt.legend()
-plt.show()
+# plt.show()
 
 def crlb():
     P = N * (N - 1) / 2
