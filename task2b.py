@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-SNRdb = 0
+SNRdb = 30
 
 amplitude = 1
 frequency = 100000
@@ -13,7 +13,7 @@ Ts = 1 / Fs
 
 
 N = 513  # Number of samples
-n0 = -(N-1)/2  # Starting index for samples
+n0 = -256  # Start index
 
 # Generate the signal :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :) :)
 # Generate sample indices
@@ -30,6 +30,7 @@ mean = 0
 SNR = 10 ** (SNRdb / 10)
 std_dev = amplitude / np.sqrt(2 * SNR)
 variance = std_dev ** 2
+print('Variance: ', variance)
 noise = np.random.normal(mean, std_dev, N) + 1j * np.random.normal(mean, std_dev, N)
 
 # noisy signal
@@ -78,7 +79,7 @@ print('Estimated Frequency: ', estimated_omega_0T)
 print('Estimated Phase: ', estimated_phi)
 
 # Compute the BLUE covariance matrix
-blue_covariance = np.linalg.inv(np.dot(H_trans_C_inv, H))
+blue_covariance = np.linalg.inv(np.dot(np.dot(H.T, np.linalg.inv(C)), H))
 
 # Extract the variances
 variance_omega_0T = blue_covariance[0, 0]
