@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from variance import findVariance
 
-SNRdb = -1000
+SNRdb = -10
 
 amplitude = 1
 frequency = 100000
@@ -31,7 +31,8 @@ mean = 0
 SNR = 10 ** (SNRdb / 10)
 std_dev = amplitude / np.sqrt(2 * SNR)
 variance = std_dev ** 2
-print('Additive noise variance: ', variance)
+print('Additive noise variance: ', variance*2)
+print('Additive noise one sided variance: ', variance)
 noise = np.random.normal(mean, std_dev, N) + 1j * np.random.normal(mean, std_dev, N)
 
 # noisy signal

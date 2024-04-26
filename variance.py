@@ -36,9 +36,7 @@ def findVariance(SNRdb, N):
     # find the variance in phase
     expected_phase = np.angle(s)
 
-    plt.plot(phase[:200])
-    plt.plot(expected_phase[:200])
-    plt.show()
+
     variance = 0
     phase_adjusted = np.copy(phase)  
 
@@ -54,10 +52,15 @@ def findVariance(SNRdb, N):
 
     # variance = np.mean((phase - expected_phase) ** 2)
     
-    #plot the first 200 values of the phase and expected phase together
-    plt.plot(phase_adjusted[:200])
-    plt.plot(expected_phase[:200])
-    plt.show()
+
+    # plt.plot(phase[:200])
+    # plt.plot(expected_phase[:200])
+    # plt.show()
+
+    # #plot the first 200 values of the phase and expected phase together
+    # plt.plot(phase_adjusted[:200])
+    # plt.plot(expected_phase[:200])
+    # plt.show()
 
     
 
@@ -69,6 +72,32 @@ def main():
     N = 100000
     variance = findVariance(SNRdb, N)
     print('Variance: ', variance)
+
+    #plot variance against SNR with log scale
+    SNRdb = np.linspace(-10, 30, 100)
+    variance = np.zeros(100)
+    for i in range(100):
+        variance[i] = findVariance(SNRdb[i], N)
+
+    plt.plot(SNRdb, variance)
+    plt.yscale('log')
+    plt.xlabel('SNR (dB)')
+    plt.ylabel('Sigma_V^2')
+
+    # Specific SNR points to annotate
+    specific_SNRs = [-10, 0, 10, 20, 30]
+    indices = [np.argmin(np.abs(SNRdb - snr)) for snr in specific_SNRs]  # Find nearest index
+
+    # Highlight specific SNRdB points
+    highlight_points = [-10, 0, 10, 20, 30]
+    highlight_variance = [findVariance(x, N) for x in highlight_points]
+    plt.scatter(highlight_points, highlight_variance, color='red')  # Red to stand out
+    for i, txt in enumerate(highlight_points):
+        plt.annotate(f'{highlight_variance[i]:.2e}', (txt, highlight_variance[i]), textcoords="offset points", xytext=(0,10), ha='center')
+
+
+    plt.show()
+
 
 if __name__ == '__main__':
     main()
