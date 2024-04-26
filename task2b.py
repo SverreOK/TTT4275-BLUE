@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from variance import findVariance
 
-SNRdb = 30
+SNRdb = -1000
 
 amplitude = 1
 frequency = 100000
@@ -30,7 +31,7 @@ mean = 0
 SNR = 10 ** (SNRdb / 10)
 std_dev = amplitude / np.sqrt(2 * SNR)
 variance = std_dev ** 2
-print('Variance: ', variance)
+print('Additive noise variance: ', variance)
 noise = np.random.normal(mean, std_dev, N) + 1j * np.random.normal(mean, std_dev, N)
 
 # noisy signal
@@ -54,7 +55,9 @@ phase = np.unwrap(phase)
 # Finding the blue
 n = np.arange(N)+n0
 H = np.column_stack((n*Ts, np.ones(N)))
-C = np.eye(N)*variance
+phaseVariance = findVariance(SNRdb, 100000)
+print('Phase Variance: ', phaseVariance)
+C = np.eye(N)*phaseVariance
 
 # Compute the BLUE estimator
 # BLUE = (H^T C^-1 H)^-1 H^T C^-1 phase_unwrapped
@@ -72,7 +75,7 @@ estimated_phi = np.mod(estimated_phi, 2*np.pi)
 s_est = amplitude * np.exp(1j * (estimated_omega_0T * t + estimated_phi))
 
 # print the original and estimated frequency and phase from the BLUE estimator
-print('SNR: ', SNRdb)
+print('SNRdB: ', SNRdb)
 print('Original Frequency: ', angular_frequency)
 print('Original Phase: ', phase_offset)
 print('Estimated Frequency: ', estimated_omega_0T)
