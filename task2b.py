@@ -29,7 +29,9 @@ s = amplitude * np.exp(1j * (angular_frequency * t + phase_offset))
 # complex white gaussian noise
 mean = 0
 SNR = 10 ** (SNRdb / 10)
+print('SNR: ', SNR)
 std_dev = amplitude / np.sqrt(2 * SNR)
+
 variance = std_dev ** 2
 print('Additive noise variance: ', variance*2)
 print('Additive noise one sided variance: ', variance)
