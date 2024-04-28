@@ -41,16 +41,16 @@ while SNRdb != 30:
     x = s + noise
     phase = np.angle(x)
     phase = np.unwrap(phase)
-    plt.plot(samples, phase, label=f'SNRdb =  {SNRdb}')
+    #plt.plot(samples, phase, label=f'SNRdb =  {SNRdb}')
 
 phase = np.angle(s)
-phase = np.unwrap(phase)
+#phase = np.unwrap(phase)
 plt.plot(samples, phase, label='Original signal')
 
 plt.xlabel('Samples')
 plt.ylabel('Phase (radians)')
-plt.title('Unwrapped Phase of Noisy Signal')
+plt.title('Wrapped Phase of Noisy Signal')
 plt.legend()
-plt.xlim(0, 500)
+plt.xlim(0, 30)
 plt.grid()
 plt.show()
