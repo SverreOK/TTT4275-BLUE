@@ -1,11 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from variance import findVariance
+import math as m
 
 SNRdb = 10
 
 amplitude = 1
-frequency = 100000
+# frequency = 100000
+frequency = 200*m.e
 
 angular_frequency = 2 * np.pi * frequency
 phase_offset = np.pi / 8
@@ -58,12 +60,13 @@ C_inv = np.linalg.inv(C)
 # Compute the BLUE estimate
 omega_0_hat = np.linalg.inv(H.T @ C_inv @ H) @ (H.T @ C_inv @ phase_diff)
 
-# Estimate of the frequency
-frequency_hat = omega_0_hat / (2 * np.pi)
+# find the variance for the BLUE estimate
+omega_0_hat_variance = np.linalg.inv(H.T @ C_inv @ H)
 
 # Display the estimate
-print('Original frequency:', angular_frequency)
-print('Estimated frequency:', frequency_hat)
+print('Original omega_0:', angular_frequency)
+print('Estimated omega_0:', omega_0_hat)
+print('Variance of omega_0 estimate:', omega_0_hat_variance)
 
 # Since the phase estimate directly from BLUE is not available, we need to use the direct ML estimate for phase as described
 # Step 5 is not needed in this specific case as we do not need to find variance for BLUE
