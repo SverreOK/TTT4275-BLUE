@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from variance import findVariance
+from variance import findPhaseVariance
 
 SNRdb = -10
 
@@ -58,9 +58,9 @@ phase = np.unwrap(phase)
 # Finding the blue
 n = np.arange(N)+n0
 H = np.column_stack((n*Ts, np.ones(N)))
-phaseVariance = findVariance(SNRdb, 100000)
-print('Phase Variance: ', phaseVariance)
-C = np.eye(N)*phaseVariance
+phase_variance = findPhaseVariance(SNRdb, 100000)
+print('Phase Variance: ', phase_variance)
+C = np.eye(N)*phase_variance
 
 # Compute the BLUE estimator
 # BLUE = (H^T C^-1 H)^-1 H^T C^-1 phase_unwrapped

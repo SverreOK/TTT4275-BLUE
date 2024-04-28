@@ -1,7 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def findVariance(SNRdb, N):
+def findVariance(SNRdb):
+    amplitude = 1
+    SNR = 10 ** (SNRdb / 10)
+    std_dev = amplitude / np.sqrt(2 * SNR)
+
+    variance = std_dev ** 2
+    return variance
+
+def findPhaseVariance(SNRdb, N):
     amplitude = 1
     frequency = 100000
     angular_frequency = 2 * np.pi * frequency
@@ -33,11 +41,11 @@ def findVariance(SNRdb, N):
     magnitude = np.abs(x)
     phase = np.angle(x)
 
-    # find the variance in phase
+    # find the phase_variance in phase
     expected_phase = np.angle(s)
 
 
-    variance = 0
+    phase_variance = 0
     phase_adjusted = np.copy(phase)  
 
     for i in range(len(phase)):
@@ -47,10 +55,9 @@ def findVariance(SNRdb, N):
             elif phase_adjusted[i] - expected_phase[i] < -np.pi:
                 phase_adjusted[i] += 2 * np.pi
     
-    # Calculate variance using vectorized operations
-    variance = np.mean((phase_adjusted - expected_phase) ** 2)
+    # Calculate phase_variance using vectorized operations
+    phase_variance = np.mean((phase_adjusted - expected_phase) ** 2)
 
-    # variance = np.mean((phase - expected_phase) ** 2)
     
 
     # plt.plot(phase[:200])
@@ -65,37 +72,41 @@ def findVariance(SNRdb, N):
     
 
 
-    return variance
+    return phase_variance
 
 def main():
     SNRdb = 0
     N = 100000
-    variance = findVariance(SNRdb, N)
-    print('Variance: ', variance)
+    phase_variance = findPhaseVariance(SNRdb, N)
+    print('Variance: ', phase_variance)
 
-    #plot variance against SNR with log scale
+    #plot phase_variance against SNR with log scale
     SNRdb = np.linspace(-10, 30, 100)
-    variance = np.zeros(100)
+    phase_variance = np.zeros(100)
     for i in range(100):
-        variance[i] = findVariance(SNRdb[i], N)
+        phase_variance[i] = findPhaseVariance(SNRdb[i], N)
 
-    plt.plot(SNRdb, variance)
+    plt.plot(SNRdb, phase_variance)
     plt.yscale('log')
     plt.xlabel('SNR (dB)')
     plt.ylabel('Sigma_V^2')
 
-    # Specific SNR points to annotate
-    specific_SNRs = [-10, 0, 10, 20, 30]
-    indices = [np.argmin(np.abs(SNRdb - snr)) for snr in specific_SNRs]  # Find nearest index
+    plt.show()
 
-    # Highlight specific SNRdB points
-    highlight_points = [-10, 0, 10, 20, 30]
-    highlight_variance = [findVariance(x, N) for x in highlight_points]
-    plt.scatter(highlight_points, highlight_variance, color='red')  # Red to stand out
-    for i, txt in enumerate(highlight_points):
-        plt.annotate(f'{highlight_variance[i]:.2e}', (txt, highlight_variance[i]), textcoords="offset points", xytext=(0,10), ha='center')
-
-
+    #plot phase variance and variance against SNR with log scale
+    SNRdb = np.linspace(-10, 30, 100)
+    phase_variance = np.zeros(100)
+    variance = np.zeros(100)
+    for i in range(100):
+        phase_variance[i] = findPhaseVariance(SNRdb[i], N)
+        variance[i] = findVariance(SNRdb[i])
+    
+    plt.plot(SNRdb, phase_variance, label='sigma_v^2')
+    plt.plot(SNRdb, variance, label='sigma_w^2')
+    plt.yscale('log')
+    plt.xlabel('SNR (dB)')
+    plt.ylabel('Variance')
+    plt.legend()
     plt.show()
 
 

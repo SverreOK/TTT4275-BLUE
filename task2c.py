@@ -3,11 +3,11 @@ import matplotlib.pyplot as plt
 from variance import findVariance
 import math as m
 
-SNRdb = 10
+SNRdb = 30
 
 amplitude = 1
-# frequency = 100000
-frequency = 200*m.e
+frequency = 100000
+# frequency = 200*m.e
 
 angular_frequency = 2 * np.pi * frequency
 phase_offset = np.pi / 8
@@ -38,6 +38,19 @@ variance = std_dev ** 2
 print('Additive noise variance: ', variance*2)
 print('Additive noise one sided variance: ', variance)
 noise = np.random.normal(mean, std_dev, N) + 1j * np.random.normal(mean, std_dev, N)
+def crlb():
+    P = N * (N - 1) / 2
+    Q = N * (N - 1) * (2 * N - 1) / 6
+
+    # CRLB for frequency and phase
+    var_omega = 12 * variance / (amplitude**2 * Ts**2 * N * (N**2 - 1))
+    var_phi   = 12 * variance * (n0**2*N+2*n0*P+Q) / (amplitude**2 * N**2 * (N**2 - 1))
+
+    print('CRLB for angular frequency: ', var_omega)
+    print('CRLB for phase: ', var_phi)
+
+
+crlb()
 
 # noisy signal
 x = s + noise
@@ -47,7 +60,7 @@ phase_diff = np.angle(x[1:]) - np.angle(x[:-1])
 
 # Step 2: Construct the design matrix H
 H = Ts * np.ones((N-1, 1))
-
+print('H:', H)
 # Step 3: Construct the covariance matrix C
 phase_variance = findVariance(SNRdb, 100000) 
 print('Phase variance:', phase_variance)
