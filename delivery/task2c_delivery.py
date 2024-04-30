@@ -36,8 +36,6 @@ def calculate_crlb(N, n0, Ts, amplitude, variance):
 def blue_estimator(noisy_signal, Ts, SNRdb, N, phase_variance):
     phases = np.angle(noisy_signal)
     phase_diff = phases[1:] - phases[:-1]
-    # phase_diff = np.where(phase_diff > np.pi, phase_diff - 2 * np.pi, phase_diff)
-    # phase_diff = np.where(phase_diff < -np.pi, phase_diff + 2 * np.pi, phase_diff)
     phase_diff = np.array(phase_diff)
     H = Ts * np.ones((N-1, 1))
     C = np.diag(2 * phase_variance * np.ones(N-1)) - np.diag(phase_variance * np.ones(N-2), k=1) - np.diag(phase_variance * np.ones(N-2), k=-1)
@@ -45,7 +43,7 @@ def blue_estimator(noisy_signal, Ts, SNRdb, N, phase_variance):
     omega_0_hat = np.linalg.inv(H.T @ C_inv @ H) @ (H.T @ C_inv @ phase_diff)
     return omega_0_hat, np.linalg.inv(H.T @ C_inv @ H)
 
-def empirical_variance(SNRdb, phase_variance, iterations=1000):
+def empirical_variance(SNRdb, phase_variance, iterations=100):
     estimates = [blue_estimator(add_noise(generate_signal(amplitude, angular_frequency, phase_offset, N, Ts, n0)[0], SNRdb)[0], Ts, SNRdb, N, phase_variance)[0] for _ in range(iterations)]
     return np.var(estimates), np.mean(estimates)
 

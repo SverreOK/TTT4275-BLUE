@@ -69,7 +69,7 @@ def crlb(SNRdb):
     print(f'CRLB for Frequency at SNR={SNRdb} dB: {var_omega}')
     print(f'CRLB for Phase at SNR={SNRdb} dB: {var_phi}')
 
-def empiricalVariance(SNRdb, phase_variance, num_simulations=1000):
+def empiricalVariance(SNRdb, phase_variance, num_simulations=100):
     omega_0T_estimates = []
     phi_estimates = []
 
