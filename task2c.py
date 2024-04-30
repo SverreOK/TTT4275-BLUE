@@ -1,13 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from variance import findVariance
+from variance import findPhaseVariance
 import math as m
 
 SNRdb = 30
 
 amplitude = 1
 frequency = 100000
-# frequency = 200*m.e
 
 angular_frequency = 2 * np.pi * frequency
 phase_offset = np.pi / 8
@@ -60,9 +59,8 @@ phase_diff = np.angle(x[1:]) - np.angle(x[:-1])
 
 # Step 2: Construct the design matrix H
 H = Ts * np.ones((N-1, 1))
-print('H:', H)
 # Step 3: Construct the covariance matrix C
-phase_variance = findVariance(SNRdb, 100000) 
+phase_variance = findPhaseVariance(SNRdb, 100000) 
 print('Phase variance:', phase_variance)
 
 C = np.diag(2 * phase_variance * np.ones(N-1)) - np.diag(phase_variance * np.ones(N-2), k=1) - np.diag(phase_variance * np.ones(N-2), k=-1)

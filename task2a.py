@@ -22,7 +22,7 @@ t = np.linspace(t0, t0 + (N - 1) * period, N)
 # complex exponential signal
 s = amplitude * np.exp(1j * (angular_frequency * t + phase))
 
-SNRdb = 10
+SNRdb = 15
 SNR = 10 ** (SNRdb / 10)
 
 
@@ -35,6 +35,9 @@ noise = np.random.normal(mean, std_dev, N) + 1j * np.random.normal(mean, std_dev
 
 # noisy signal
 x = s + noise
+
+#noisy signal projected onto the unit circle
+y = x / np.abs(x)
 
 # Calculate magnitude and phase of the noisy signal
 magnitude = np.abs(x)
@@ -61,18 +64,35 @@ plt.tight_layout()
 plt.show()
 
 # Plot complex signal
-plt.figure(figsize=(8, 6))
-plt.plot(x.real, x.imag, '.', label='Noisy Signal', color='red')
-
+plt.figure(figsize=(6, 5))
+plt.plot(x.real, x.imag, '.', label='Noisy Signal', color='red', markersize=7)
+plt.plot(y.real, y.imag, '.', label='Projection onto Unit Circle', color='green', markersize=10)
+plt.plot(s.real, s.imag, '.', label='Original Signal', color='blue', markersize=10, marker='x')
 
 plt.xlabel('Real')
 plt.ylabel('Imaginary')
-plt.title('Complex Signal with and without Noise')
+plt.title('Projection of Noisy Signal onto Unit Circle')
 plt.grid(True)
 plt.axis('equal')  # Equal aspect ratio
 
-circle = plt.Circle((0, 0), amplitude, color='b', fill=False, linestyle='--', label='Original Signal')
+circle = plt.Circle((0, 0), amplitude, color='b', fill=False, linestyle='--')
 plt.gca().add_artist(circle)
 
+plt.legend()
+plt.show()
+
+#plot complex plane with error vectors from the original signal to the noisy signal
+plt.figure(figsize=(8, 6))
+plt.plot(x.real, x.imag, '.', label='Noisy Signal', color='red')
+plt.plot(s.real, s.imag, '.', label='Original Signal', color='blue')
+
+for i in range(N):
+    plt.arrow(s.real[i], s.imag[i], x.real[i] - s.real[i], x.imag[i] - s.imag[i], head_width=0.05, head_length=0.05, fc='k', ec='k')
+
+plt.xlabel('Real')
+plt.ylabel('Imaginary')
+plt.title('Complex Signal with Error Vectors')
+plt.grid(True)
+plt.axis('equal')  # Equal aspect ratio
 plt.legend()
 plt.show()
