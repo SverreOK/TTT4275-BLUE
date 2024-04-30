@@ -57,21 +57,7 @@ def findPhaseVariance(SNRdb, N):
     
     # Calculate phase_variance using vectorized operations
     phase_variance = np.mean((phase_adjusted - expected_phase) ** 2)
-
     
-
-    # plt.plot(phase[:200])
-    # plt.plot(expected_phase[:200])
-    # plt.show()
-
-    # #plot the first 200 values of the phase and expected phase together
-    # plt.plot(phase_adjusted[:200])
-    # plt.plot(expected_phase[:200])
-    # plt.show()
-
-    
-
-
     return phase_variance
 
 def main():
